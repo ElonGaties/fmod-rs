@@ -18,6 +18,7 @@ use {
 /// - `0` indicates that no system exists, and one may be created.
 /// - `>= 1` indicates that systems exist, and creating another is unsafe.
 pub(crate) static GLOBAL_SYSTEM_STATE: RwLock<usize> = RwLock::new(0);
+pub(crate) static GLOBAL_STUDIO_SYSTEM_STATE: RwLock<usize> = RwLock::new(0);
 
 #[allow(clippy::missing_safety_doc)]
 /// FMOD resources managed by a [Handle].

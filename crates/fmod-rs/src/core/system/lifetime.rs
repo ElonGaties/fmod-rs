@@ -38,6 +38,22 @@ impl System {
         unsafe { Self::new_inner(&mut system_count) }
     }
 
+    pub fn from_raw_ptr(raw: *mut FMOD_SYSTEM) -> Result<Handle<'static, Self>> {
+        let system_exists = GLOBAL_SYSTEM_STATE.upgradable_read();
+        if *system_exists != 0 {
+            whoops!("Only one FMOD system may be created safely. \
+                Read the docs on `System::new_unchecked` if you actually mean to create more than one system. \
+                Note: constructing a studio system automatically creates a core system for you!");
+            yeet!(Error::Initialized);
+        }
+
+        // guard against racing other free API calls
+        let mut system_count = RwLockUpgradableReadGuard::upgrade(system_exists);
+
+        // actual creation
+        unsafe { Self::from_raw_ptr_inner(raw, &mut system_count) }
+    }
+
     /// Create an instance of the FMOD system.
     ///
     /// # ⚠ SAFETY WARNING ⚠
@@ -138,6 +154,13 @@ impl System {
 
         let mut raw = ptr::null_mut();
         ffi!(FMOD_System_Create(&mut raw, FMOD_VERSION))?;
+        *system_count += 1;
+        Ok(Handle::new(raw)) // Could use from_raw_inner but not gonna rn :3
+    }
+
+    unsafe fn from_raw_ptr_inner(raw: *mut FMOD_SYSTEM, system_count: &mut usize) -> Result<Handle<'static, Self>> {
+        debug::initialize_default(); // setup debug logging
+
         *system_count += 1;
         Ok(Handle::new(raw))
     }
