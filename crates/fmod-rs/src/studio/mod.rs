@@ -1,6 +1,7 @@
 #![doc = include_str!("README.md")]
 
 use fmod::*;
+use fmod::InstanceType::StudioEventDescription;
 
 fmod_class! {
     /// The main system object for FMOD Studio.
@@ -8,7 +9,7 @@ fmod_class! {
     /// Initializing the studio system object also initializes the core System object.
     class System = FMOD_STUDIO_SYSTEM;
 
-    mod lifetime, update, banks, listeners, buses;
+    mod lifetime, update, banks, listeners, buses, events;
 }
 
 fmod_class! {
@@ -24,4 +25,11 @@ fmod_class! {
     class Bus = FMOD_STUDIO_BUS;
 
     mod general;
+}
+
+fmod_class! {
+    /// Event Description info docu
+    class EventDescription = FMOD_STUDIO_EVENTDESCRIPTION;
+
+    mod instances;
 }
