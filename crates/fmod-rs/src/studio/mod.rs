@@ -8,7 +8,7 @@ fmod_class! {
     /// Initializing the studio system object also initializes the core System object.
     class System = FMOD_STUDIO_SYSTEM;
 
-    mod lifetime, update, banks;
+    mod lifetime, update, banks, listeners, buses;
 }
 
 fmod_class! {
@@ -17,4 +17,11 @@ fmod_class! {
     class Bank = FMOD_STUDIO_BANK;
 
     mod loading;
+}
+
+fmod_class! {
+    /// Bus info docu
+    class Bus = FMOD_STUDIO_BUS;
+
+    mod general;
 }
